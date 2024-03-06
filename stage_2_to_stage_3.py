@@ -1,4 +1,4 @@
-from utility_functions import sap_flow_S2_to_S3, met_S2_to_S3, gasex_S2_to_S3, psych_S2_to_S3, isotopes_S2_to_S3, \
+from utility_functions import sap_flow_S2_to_S3, met_S2_to_S3, gasex_S2_to_S3, isotopes_S2_to_S3, \
     sap_install_S2_to_S3, soil_moisture_S2_to_S3, lwp_S2_to_S3, leaf_area_S2_to_S3, root_S2_to_S3, gasex_curves_S2_to_S3, \
     plot_data_stage
 '''
@@ -10,7 +10,6 @@ def S2_to_S3(input_folder = 'Stage_2_Data', output_folder='Stage_3_Data', plot_r
     sap_flow_df = sap_flow_S2_to_S3(input_folder)
     gasex_df = gasex_S2_to_S3(input_folder) #doesn't do anything
     met_df = met_S2_to_S3(input_folder)
-    psych_df = psych_S2_to_S3(input_folder)
     soil_moisture_df = soil_moisture_S2_to_S3(input_folder) #currently doesn't do any cleaning
     lwp_df = lwp_S2_to_S3(input_folder) #currently doesn't do any cleaning
     isotopes_df = isotopes_S2_to_S3(input_folder) #currently doesn't do any cleaning
@@ -27,8 +26,6 @@ def S2_to_S3(input_folder = 'Stage_2_Data', output_folder='Stage_3_Data', plot_r
     gasex_df.to_csv('%s/csv_Files/gasex.csv' % output_folder)
     met_df.to_pickle('%s/met.pkl' % output_folder)
     met_df.to_csv('%s/csv_Files/met.csv' % output_folder)
-    psych_df.to_pickle('%s/psych.pkl' % output_folder)
-    psych_df.to_csv('%s/csv_Files/psych.csv' % output_folder)
     lwp_df.to_pickle('%s/lwp.pkl' % output_folder)
     lwp_df.to_csv('%s/csv_Files/lwp.csv' % output_folder)
     soil_moisture_df.to_pickle('%s/soil_moisture.pkl' % output_folder)
@@ -45,7 +42,7 @@ def S2_to_S3(input_folder = 'Stage_2_Data', output_folder='Stage_3_Data', plot_r
     gasex_curves_df.to_csv('%s/gasex_curves.csv' % output_folder)
 
     if plot_results == True:
-        plot_data_stage(sap_flow=sap_flow_df, psych=psych_df, soil_moisture=soil_moisture_df, lwp=lwp_df, gasex=gasex_df,
+        plot_data_stage(sap_flow=sap_flow_df, soil_moisture=soil_moisture_df, lwp=lwp_df, gasex=gasex_df,
                         met=met_df,isotopes=isotopes_df, stage=3)
 
 if __name__ == '__main__':

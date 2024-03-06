@@ -358,80 +358,6 @@ def import_raw_met(raw_data_folder):
     met_df[cols[1:]] = met_df[cols[1:]].apply(pd.to_numeric, errors='coerce')
     return met_df
 
-def import_raw_psychrometer(raw_data_folder):
-    psych_T1_df=pd.read_csv('%s/Psychrometer/PSY1G502.csv' % raw_data_folder, skiprows=15, header=0, encoding_errors='ignore')
-    #combine date and time columns into combined timestamp in format YYYY-MM-DD HH:MM:SS
-    psych_T1_df['TIMESTAMP'] = pd.to_datetime(psych_T1_df['Date'].apply(str)+' '+psych_T1_df['Time'])
-    #replace spaces in column headers with underscores
-    psych_T1_df.columns = psych_T1_df.columns.str.replace(' ', '_')
-    #format non-string and date columns to floats
-    cols=[i for i in psych_T1_df.columns if i not in ["TIMESTAMP", "Date", "Time", "External_Power_Supply_Present",
-                                                      "External_Power_Supply_Current_(mA)",
-                                                      "External_Power_Supply_Voltage_(V)"]]
-    for col in cols:
-        psych_T1_df[col]=pd.to_numeric(psych_T1_df[col])
-    #Add tree number data column
-    psych_T1_df['Tree_Number'] = 1
-
-    #repeat for Tree 2
-    psych_T2_df = pd.read_csv('%s/Psychrometer/PSY1E10S.csv' % raw_data_folder, skiprows=15, header=0,encoding_errors='ignore')
-    psych_T2_df['TIMESTAMP'] = pd.to_datetime(psych_T2_df['Date'].apply(str) + ' ' + psych_T2_df['Time'])
-    psych_T2_df.columns = psych_T2_df.columns.str.replace(' ', '_')
-    cols = [i for i in psych_T2_df.columns if i not in ["TIMESTAMP", "Date", "Time", "External_Power_Supply_Present",
-                                                        "External_Power_Supply_Current_(mA)",
-                                                        "External_Power_Supply_Voltage_(V)"]]
-    for col in cols:
-        psych_T2_df[col] = pd.to_numeric(psych_T2_df[col])
-    psych_T2_df['Tree_Number'] = 2
-
-    # repeat for Tree 3
-    psych_T3_df = pd.read_csv('%s/Psychrometer/PSY1GA0I.csv' % raw_data_folder, skiprows=15, header=0, encoding_errors='ignore')
-    psych_T3_df['TIMESTAMP'] = pd.to_datetime(psych_T3_df['Date'].apply(str) + ' ' + psych_T3_df['Time'])
-    psych_T3_df.columns = psych_T3_df.columns.str.replace(' ', '_')
-    cols = [i for i in psych_T3_df.columns if i not in ["TIMESTAMP", "Date", "Time", "External_Power_Supply_Present",
-                                                        "External_Power_Supply_Current_(mA)",
-                                                        "External_Power_Supply_Voltage_(V)"]]
-    for col in cols:
-        psych_T3_df[col] = pd.to_numeric(psych_T3_df[col])
-    psych_T3_df['Tree_Number'] = 3
-
-    # repeat for Tree 4
-    #NOTE weird data at end after disconnected and battery was low will be skipped
-    psych_T4_df = pd.read_csv('%s/Psychrometer/PSY1E10T.csv' % raw_data_folder, skiprows=15, header=0, error_bad_lines=False, encoding_errors='ignore')
-    psych_T4_df['TIMESTAMP'] = pd.to_datetime(psych_T4_df['Date'].apply(str) + ' ' + psych_T4_df['Time'])
-    psych_T4_df.columns = psych_T4_df.columns.str.replace(' ', '_')
-    cols = [i for i in psych_T4_df.columns if i not in ["TIMESTAMP", "Date", "Time", "External_Power_Supply_Present",
-                                                        "External_Power_Supply_Current_(mA)",
-                                                        "External_Power_Supply_Voltage_(V)"]]
-    for col in cols:
-        psych_T4_df[col] = pd.to_numeric(psych_T4_df[col])
-    psych_T4_df['Tree_Number'] = 4
-
-    # repeat for Tree 5
-    psych_T5_df = pd.read_csv('%s/Psychrometer/PSY1E40Z.csv' % raw_data_folder, skiprows=15, header=0, encoding_errors='ignore')
-    psych_T5_df['TIMESTAMP'] = pd.to_datetime(psych_T5_df['Date'].apply(str) + ' ' + psych_T5_df['Time'])
-    psych_T5_df.columns = psych_T5_df.columns.str.replace(' ', '_')
-    cols = [i for i in psych_T5_df.columns if i not in ["TIMESTAMP", "Date", "Time", "External_Power_Supply_Present",
-                                                        "External_Power_Supply_Current_(mA)",
-                                                        "External_Power_Supply_Voltage_(V)"]]
-    for col in cols:
-        psych_T5_df[col] = pd.to_numeric(psych_T5_df[col])
-    psych_T5_df['Tree_Number'] = 5
-
-    # repeat for Tree 6
-    psych_T6_df = pd.read_csv('%s/Psychrometer/PSY1E10F.csv' % raw_data_folder, skiprows=15, header=0, encoding_errors='ignore')
-    psych_T6_df['TIMESTAMP'] = pd.to_datetime(psych_T6_df['Date'].apply(str) + ' ' + psych_T6_df['Time'])
-    psych_T6_df.columns = psych_T6_df.columns.str.replace(' ', '_')
-    cols = [i for i in psych_T6_df.columns if i not in ["TIMESTAMP", "Date", "Time", "External_Power_Supply_Present",
-                                                        "External_Power_Supply_Current_(mA)",
-                                                        "External_Power_Supply_Voltage_(V)"]]
-    for col in cols:
-        psych_T6_df[col] = pd.to_numeric(psych_T6_df[col])
-    psych_T6_df['Tree_Number'] = 6
-
-    psych_df = pd.concat([psych_T1_df, psych_T2_df, psych_T3_df, psych_T4_df, psych_T5_df, psych_T6_df], ignore_index=True, sort=False)
-
-    return psych_df
 
 def import_raw_gas_exchange(raw_data_folder):
     #import csv version of licor data sheet
@@ -638,18 +564,6 @@ def met_S1_to_S2(input_folder):
 
     return met_df
 
-def psych_S1_to_S2(input_folder):
-    #load pickled dataframe from prior stage
-    psych_df = pd.read_pickle('%s/psych.pkl' % input_folder)
-
-    #remove data from outside date range of experiment
-    psych_df = psych_df[psych_df['TIMESTAMP'] >= "2021-07-06 00:00:00"]
-    psych_df = psych_df[psych_df['TIMESTAMP'] <= "2021-07-27 23:59:59"]
-
-    #remove obviously bad data points
-    psych_df = psych_df[psych_df['Corrected_Water_Potential_(MPa)'] <= 1.0]
-    return psych_df
-
 def lwp_S1_to_S2(input_folder):
     #load pickled dataframe from prior stage
     lwp_df = pd.read_pickle('%s/lwp.pkl' % input_folder)
@@ -770,11 +684,6 @@ def leaf_area_S2_to_S3(input_folder):
 
     return leaf_area_df
 
-def psych_S2_to_S3(input_folder):
-    #load pickled dataframe from prior stage
-    psych_df = pd.read_pickle('%s/psych.pkl' % input_folder)
-
-    return psych_df
 
 def isotopes_S2_to_S3(input_folder):
     #load pickled dataframe from prior stage
@@ -878,13 +787,6 @@ def gasex_S3_to_S4(input_folder):
     #no other corrections
     return gasex_df
 
-def psych_S3_to_S4(input_folder):
-    #load pickled dataframe from prior stage
-    psych_df = pd.read_pickle('%s/psych.pkl' % input_folder)
-
-    #no other corrections currently
-
-    return psych_df
 
 def isotopes_S3_to_S4(input_folder):
     #load pickled dataframe from prior stage
@@ -918,7 +820,7 @@ def soil_moisture_S3_to_S4(input_folder):
 
     return soil_moisture_df
 
-def plot_data_stage(sap_flow=None, psych=None, soil_moisture=None, lwp=None, gasex=None, met=None, isotopes=None, stage=1):
+def plot_data_stage(sap_flow=None, soil_moisture=None, lwp=None, gasex=None, met=None, isotopes=None, stage=1):
     if sap_flow is not None:
         sap_flow['Clock'] = pd.to_datetime(sap_flow['TIMESTAMP'], format="%Y-%m-%d %H:%M:%S").dt.time
         #sap_flow['Clock'] = pd.to_datetime(sap_flow['TIMESTAMP']) - pd.to_datetime(sap_flow['TIMESTAMP']).dt.normalize()
@@ -1042,25 +944,6 @@ def plot_data_stage(sap_flow=None, psych=None, soil_moisture=None, lwp=None, gas
         ax6.set_xticks(['0:00', '12:00'])
 
         plt.savefig('Output_Plots/sapflow_tree_split.pdf')
-        plt.show()
-
-    if psych is not None:
-        psych_1 = psych[psych['Tree_Number'] == 1]
-        psych_2 = psych[psych['Tree_Number'] == 2]
-        psych_3 = psych[psych['Tree_Number'] == 3]
-        psych_4 = psych[psych['Tree_Number'] == 4]
-        psych_5 = psych[psych['Tree_Number'] == 5]
-        psych_6 = psych[psych['Tree_Number'] == 6]
-
-        ax = plt.gca()
-        psych_1.plot(kind='line', x='TIMESTAMP', y='Corrected_Water_Potential_(MPa)', label='1', ax=ax)
-        psych_2.plot(kind='line', x='TIMESTAMP', y='Corrected_Water_Potential_(MPa)', label='2', ax=ax)
-        psych_3.plot(kind='line', x='TIMESTAMP', y='Corrected_Water_Potential_(MPa)', label='3', ax=ax)
-        psych_4.plot(kind='line', x='TIMESTAMP', y='Corrected_Water_Potential_(MPa)', label='4', ax=ax)
-        psych_5.plot(kind='line', x='TIMESTAMP', y='Corrected_Water_Potential_(MPa)', label='5', ax=ax)
-        psych_6.plot(kind='line', x='TIMESTAMP', y='Corrected_Water_Potential_(MPa)', label='6', ax=ax)
-        plt.legend()
-        plt.ylabel('Stem Water Potential (MPa)')
         plt.show()
 
     if lwp is not None:
@@ -1283,7 +1166,7 @@ def plot_data_stage(sap_flow=None, psych=None, soil_moisture=None, lwp=None, gas
         soil_day5.plot(kind='scatter', x='VWC_Percent', y='Depth_cm', c=col)
         plt.show()
 
-def plot_results(sap_flow=None, psych=None, soil_moisture=None, lwp=None, gasex=None, met=None, isotopes=None, leaf_area = None, root=None, gasex_curves=None,  stage=1):
+def plot_results(sap_flow=None, soil_moisture=None, lwp=None, gasex=None, met=None, isotopes=None, leaf_area = None, root=None, gasex_curves=None,  stage=1):
     #makes assortment of plots for each data input provided. Makes a lot more plots than the plot_data_stage_function
     tree_colors = ['tab:blue', 'tab:orange', 'tab:green', 'tab:red', 'tab:purple', 'tab:brown']
     day_colors = ['#f4a582', '#d6604d', '#b2182b', '#92c5de', '#2166ac']

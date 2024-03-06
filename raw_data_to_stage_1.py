@@ -1,4 +1,4 @@
-from utility_functions import import_raw_sapflow, import_raw_met, import_raw_psychrometer, import_raw_gas_exchange, \
+from utility_functions import import_raw_sapflow, import_raw_met, import_raw_gas_exchange, \
     import_raw_lwp, import_raw_soil_moisture, import_raw_isotopes, import_raw_install, import_raw_leaf_area, \
     import_raw_root_data, import_raw_gasex_curve
 '''
@@ -11,7 +11,6 @@ def raw_to_S1(input_folder = 'Raw_Data', output_folder='Stage_1_Data'):
     #imports data and formats to dataframes
     sap_flow_df= import_raw_sapflow(input_folder)
     met_df = import_raw_met(input_folder)
-    psych_df = import_raw_psychrometer(input_folder)
     gasex_df = import_raw_gas_exchange(input_folder)
     lwp_df = import_raw_lwp(input_folder)
     soil_moisture_df = import_raw_soil_moisture(input_folder)
@@ -26,8 +25,6 @@ def raw_to_S1(input_folder = 'Raw_Data', output_folder='Stage_1_Data'):
     sap_flow_df.to_csv('%s/csv_Files/sap_flow.csv' % output_folder)
     met_df.to_pickle('%s/met.pkl' % output_folder)
     met_df.to_csv('%s/csv_Files/met.csv' % output_folder)
-    psych_df.to_pickle('%s/psych.pkl' % output_folder)
-    psych_df.to_csv('%s/csv_Files/psych.csv' % output_folder)
     gasex_df.to_pickle('%s/gasex.pkl' % output_folder)
     gasex_df.to_csv('%s/csv_Files/gasex.csv' % output_folder)
     lwp_df.to_pickle('%s/lwp.pkl' % output_folder)
