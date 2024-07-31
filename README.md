@@ -6,6 +6,8 @@ This repository contains the scripts for processing and analyzing the data colle
 
 This code is run in Python 3.10, and the necessary accompanying packages and versions are listed in the requirements.txt file.
 
+Stage 1 data are available at: 10.5281/zenodo.10685214 
+
 Author Info: Jean Wilkening (jvwilkening@berkeley.edu)
 
 ### Code
