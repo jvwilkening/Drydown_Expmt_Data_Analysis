@@ -8,10 +8,10 @@ import numpy as np
 from sklearn.feature_selection import mutual_info_regression
 
 
-def custom_mi_reg(a, b, neighbors=2):
+def custom_mi_reg(a, b, neighbors=2, random_seed=13):
     a = a.reshape(-1, 1)
     b = b.reshape(-1, 1)
-    return  mutual_info_regression(a, b, n_neighbors=neighbors)[0] # should return a float value
+    return  mutual_info_regression(a, b, n_neighbors=neighbors, random_state=random_seed)[0] # should return a float value
 
 def classify_sampling_day(row):
     if row['TIMESTAMP'] >= pd.Timestamp('2021-07-08 00:00:00') and row['TIMESTAMP'] < pd.Timestamp('2021-07-09 00:00:00'):
